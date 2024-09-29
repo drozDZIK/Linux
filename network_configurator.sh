@@ -11,24 +11,24 @@ if [[ -z "$static_ip" || -z "$gateway" ]]; then
 fi
 
 # Zapisanie nowej konfiguracji do pliku
-cat <<EOL > /etc/netplan/00-installer-config.yaml
-# This is the network config written by 'subiquity'
-network:
-  renderer: networkd
-  ethernets:
-    ens18:
-      dhcp4: no                 # Wylaczenie DHCP (dynamiczne przydzielanie IP)
-      addresses:
-        - ${static_ip}/24      # Statyczny adres IP z maską podsieci
-      routes:
-        - to: 0.0.0.0/0
-          via: ${gateway}     # Brama domyślna
-      nameservers:
-        addresses:
-          - 8.8.8.8
-          - 8.8.4.4
-  version: 2
-EOL
+{
+  echo "# This is the network config written by 'subiquity'"
+  echo "network:"
+  echo "  renderer: networkd"
+  echo "  ethernets:"
+  echo "    ens18:"
+  echo "      dhcp4: no                 # Wylaczenie DHCP (dynamiczne przydzielanie IP)"
+  echo "      addresses:"
+  echo "        - ${static_ip}/24      # Statyczny adres IP z maską podsieci"
+  echo "      routes:"
+  echo "        - to: 0.0.0.0/0"
+  echo "          via: ${gateway}     # Brama domyślna"
+  echo "      nameservers:"
+  echo "        addresses:"
+  echo "          - 8.8.8.8"
+  echo "          - 8.8.4.4"
+  echo "  version: 2"
+} > /etc/netplan/00-installer-config.yaml
 
 # Zastosowanie nowej konfiguracji
 netplan apply
