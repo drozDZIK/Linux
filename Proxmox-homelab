@@ -1,0 +1,21 @@
+Proxmox homelab update from 8.0.3 to 8.4.21
+
+# wyłącz repo enterprise
+sed -i 's/^deb/#deb/' /etc/apt/sources.list.d/pve-enterprise.list
+
+# darmowe repo PVE i Ceph
+echo "deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription" > /etc/apt/sources.list.d/pve-no-subscription.list
+echo "deb http://download.proxmox.com/debian/ceph-quincy bookworm no-subscription" > /etc/apt/sources.list.d/ceph.list
+
+# aktualizacja
+apt update && apt dist-upgrade -y
+
+# Aktualizuje lokalną listę (indeks) dostępnych szablonów kontenerów LXC z repozytorium Proxmox.
+pveam update
+
+# restart proxmoxa
+reboot
+
+# sprawdzenie wersji po reboocie 
+root@pve-centrum:~# pveversion
+pve-manager/8.4.21/2606ac850d46da29 (running kernel: 6.8.12-43-pve)
